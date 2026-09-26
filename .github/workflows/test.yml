@@ -15,3 +15,13 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Test inside MariaDB
         run: python3 tests/sql_integration.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mariadb-jev-ubuntu24-amd64
+          path: |
+            build/mariadb_jev.so
+            sql/install.sql
+            sql/uninstall.sql
+            README.md
+            LICENSE
+          if-no-files-found: error
