@@ -108,11 +108,11 @@ La caché pertenece a cada expresión SQL: textos, condiciones y modelo idéntic
 | `JEV_TIMEOUT_MS` | `10000` |
 | `JEV_MAX_REQUESTS` | `1000` |
 
-The endpoint protocol follows the [TypeSafe API reference](https://docs.typesafe.ai/api.md). The tests use synthetic data and a mock endpoint; they do not measure live Jev accuracy or throughput.
+The endpoint protocol follows the [TypeSafe API reference](https://docs.typesafe.ai/api.md). The tests use synthetic data and a mock endpoint, including a SQL test inside MariaDB in CI; they do not measure live Jev accuracy or throughput.
 
-Le protocole suit la [référence TypeSafe](https://docs.typesafe.ai/api.md). Les tests utilisent des données synthétiques et une API simulée ; ils ne mesurent ni la précision ni le débit de Jev en production.
+Le protocole suit la [référence TypeSafe](https://docs.typesafe.ai/api.md). Les tests utilisent des données synthétiques et une API simulée, y compris un test SQL dans MariaDB en CI ; ils ne mesurent ni la précision ni le débit de Jev en production.
 
-El protocolo sigue la [referencia de TypeSafe](https://docs.typesafe.ai/api.md). Las pruebas usan datos sintéticos y una API simulada; no miden la precisión ni el rendimiento reales de Jev.
+El protocolo sigue la [referencia de TypeSafe](https://docs.typesafe.ai/api.md). Las pruebas usan datos sintéticos y una API simulada, incluida una prueba SQL en MariaDB en CI; no miden la precisión ni el rendimiento reales de Jev.
 
 Licence MIT. Sans affiliation avec TypeSafe ou MariaDB.
 
