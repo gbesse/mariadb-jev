@@ -18,6 +18,10 @@ WHERE rating >= 3
 
 `jev_all(texte, tableau_json)` exige que toutes les conditions aient une probabilité Jev d'au moins 0,5. `jev_any` en exige une seule. `jev_probability(texte, condition)` renvoie la probabilité brute. `NULL` produit `NULL` sans appel réseau. Ce ne sont pas des résultats déterministes ni une recherche vectorielle.
 
+### Exemple borné
+
+[`sql/bounded-review-example.sql`](sql/bounded-review-example.sql) matérialise d'abord au plus cinq lignes admissibles dans une table temporaire, puis appelle `jev_probability` une fois par ligne retenue. La requête suppose la table `reviews(id, review, rating)` ; elle nécessite un serveur configuré et engendre jusqu'à cinq appels payants. Ne traitez pas la probabilité comme une décision automatique.
+
 ### Installer et vérifier
 
 Sur Linux avec MariaDB, CMake, libcurl et Jansson installés :
@@ -50,6 +54,10 @@ WHERE rating >= 3
 
 `jev_all(text, json_array)` requires every condition to have Jev probability at least 0.5. `jev_any` requires one. `jev_probability(text, condition)` returns the raw probability. `NULL` yields `NULL` without a network call. These are model judgments, not deterministic facts or vector search.
 
+### Bounded example
+
+[`sql/bounded-review-example.sql`](sql/bounded-review-example.sql) first materializes at most five eligible rows in a temporary table, then calls `jev_probability` once per retained row. It assumes `reviews(id, review, rating)` and a configured server, and can make up to five paid calls. Do not treat the probability as an automatic decision.
+
 ### Install and verify
 
 On Linux with MariaDB, CMake, libcurl and Jansson installed:
@@ -81,6 +89,10 @@ WHERE rating >= 3
 ```
 
 `jev_all(texto, arreglo_json)` exige que todas las condiciones tengan una probabilidad Jev de al menos 0,5. `jev_any` exige una. `jev_probability(texto, condición)` devuelve la probabilidad. `NULL` produce `NULL` sin llamada de red. Son juicios del modelo, no hechos deterministas ni búsqueda vectorial.
+
+### Ejemplo acotado
+
+[`sql/bounded-review-example.sql`](sql/bounded-review-example.sql) materializa primero un máximo de cinco filas aptas en una tabla temporal y luego llama a `jev_probability` una vez por fila conservada. Supone `reviews(id, review, rating)` y un servidor configurado; puede realizar hasta cinco llamadas de pago. No trate la probabilidad como una decisión automática.
 
 ### Instalar y comprobar
 
