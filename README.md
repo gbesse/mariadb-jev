@@ -131,3 +131,7 @@ Licence MIT. Sans affiliation avec TypeSafe ou MariaDB.
 MIT license. Not affiliated with TypeSafe or MariaDB.
 
 Licencia MIT. Sin afiliación con TypeSafe ni MariaDB.
+
+## Contrôle d’adoption · Adoption check · Comprobación de adopción
+
+[Français : essayer un cas concret](examples/adoption-check.md) · [English: try a concrete case](examples/adoption-check.md) · [Español: pruebe un caso concreto](examples/adoption-check.md).
