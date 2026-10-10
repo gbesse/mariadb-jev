@@ -40,3 +40,15 @@ FR : adaptez une copie de la fixture locale à cette situation, puis vérifiez l
 EN: adapt a copy of the local fixture to this situation, then check the behavior described above. Values are illustrative, not measured Jev output.
 
 ES: adapte una copia de la fixture local a esta situación y compruebe el comportamiento descrito arriba. Los valores son ilustrativos, no resultados Jev medidos.
+
+## Second cas · Second case · Segundo caso
+
+```text
+input_text=NULL; predicate=jev_probability
+```
+
+**FR :** Une entrée SQL `NULL` doit renvoyer `NULL` sans appel payant. Vérifiez ce comportement sur un serveur configuré avant d’utiliser la fonction dans une requête volumineuse.
+
+**EN:** A SQL `NULL` input should return `NULL` without a paid call. Confirm this on a configured server before using the function in a large query.
+
+**ES:** Una entrada SQL `NULL` debe devolver `NULL` sin llamada de pago. Confírmelo en un servidor configurado antes de usar la función en una consulta grande.
