@@ -135,3 +135,11 @@ Licencia MIT. Sin afiliación con TypeSafe ni MariaDB.
 ## Contrôle d’adoption · Adoption check · Comprobación de adopción
 
 [Français : essayer un cas concret](examples/adoption-check.md) · [English: try a concrete case](examples/adoption-check.md) · [Español: pruebe un caso concreto](examples/adoption-check.md).
+
+## Strict text preflight / Prévalidation du texte / Validación previa del texto
+
+EN: Invalid UTF-8 in SQL values, conditions or model names now fails before HTTP dispatch instead of becoming an omitted JSON field. Rejected values consume no request budget and cannot warm the cache. Engine regression assertions stay active in Release builds, so the default CI build actually checks the positive routing/cache assertions. Native Linux tests and MariaDB mock integration are required before release; no production database or live account is used.
+
+FR : Le UTF-8 invalide dans les valeurs SQL, conditions ou noms de modèle échoue désormais avant l’envoi HTTP au lieu de devenir un champ JSON omis. Un rejet ne consomme aucun budget et n’alimente pas le cache. Les assertions moteur restent actives en build Release : le CI par défaut vérifie réellement routage et cache. Tests Linux natifs et intégration MariaDB simulée sont requis avant release ; aucune base de production ni compte réel n’est utilisé.
+
+ES: UTF-8 incorrecto en valores SQL, condiciones o nombres de modelo falla antes de enviar HTTP en lugar de omitir campos JSON. Un rechazo no consume presupuesto ni alimenta la caché. Aserciones del motor siguen activas en Release: el CI comprueba realmente rutas y caché. Se requieren pruebas Linux nativas e integración MariaDB simulada antes de publicar; no usa bases de producción ni cuentas reales.
