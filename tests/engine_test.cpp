@@ -41,6 +41,14 @@ int main() {
   rejects([] { jev::parse_response(R"({"answers":{"q0":{"type":"noul","noul":1.5}}})", 1); });
   rejects([] { jev::parse_response(R"({"answers":{}})", 1); });
 
+  rejects([] { jev::parse_response(R"({"answers":{}})", 0); });
+  rejects([] { jev::parse_response(R"({"answers":{}})", 9); });
+  rejects([] { jev::parse_response(R"({"answers":{}})", static_cast<std::size_t>(-1)); });
+  rejects([] { jev::parse_response(R"({"answers":{"q0":{"type":"noul","noul":0.9},"extra":{"type":"noul","noul":0.2}}})", 1); });
+  rejects([] { jev::parse_response(R"({"model":"other","answers":{"q0":{"type":"noul","noul":0.9}}})", 1, "jev-1.13.0"); });
+  rejects([] { jev::parse_response(R"({"model":null,"answers":{"q0":{"type":"noul","noul":0.9}}})", 1, "jev-1.13.0"); });
+  assert(jev::parse_response(R"({"model":"jev-1.13.0","answers":{"q0":{"type":"noul","noul":0.9}}})", 1, "jev-1.13.0")[0] == 0.9);
+  assert(jev::parse_response(R"({"answers":{"q0":{"type":"noul","noul":0.9}}})", 1, "jev-1.13.0")[0] == 0.9);
   auto settings = jev::settings_from_environment();
   settings.max_requests = 1;
   jev::Client client(settings);

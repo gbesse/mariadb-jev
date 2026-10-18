@@ -21,7 +21,8 @@ std::vector<std::string> parse_conditions(std::string_view json);
 std::string make_request(std::string_view value,
                          const std::vector<std::string>& conditions,
                          std::string_view model);
-std::vector<double> parse_response(std::string_view json, std::size_t expected);
+std::vector<double> parse_response(std::string_view json, std::size_t expected,
+                                   std::string_view expected_model = {});
 
 class Client {
  public:

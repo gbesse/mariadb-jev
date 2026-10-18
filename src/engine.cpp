@@ -145,13 +145,21 @@ std::string make_request(std::string_view value,
   return result;
 }
 
-std::vector<double> parse_response(std::string_view input, std::size_t expected) {
+std::vector<double> parse_response(std::string_view input, std::size_t expected,
+                                   std::string_view expected_model) {
+  if (expected < 1 || expected > kMaxQuestions) throw std::runtime_error("Nombre de questions invalide / Invalid question count / Numero de preguntas no valido");
   if (input.size() > kMaxResponse) throw std::runtime_error("Jev response too large");
   json_error_t error;
   auto root = json_owner(json_loadb(input.data(), input.size(), JSON_REJECT_DUPLICATES, &error));
   if (!root) throw std::runtime_error("invalid Jev JSON response");
   json_t* answers = json_object_get(root.get(), "answers");
   if (!json_is_object(answers)) throw std::runtime_error("Jev answers are missing");
+  if (json_object_size(answers) != expected) throw std::runtime_error("Nombre de reponses inattendu / Unexpected answer count / Numero de respuestas inesperado");
+  json_t* model = json_object_get(root.get(), "model");
+  if (!expected_model.empty() && model && (!json_is_string(model) ||
+      std::string_view(json_string_value(model), json_string_length(model)) != expected_model)) {
+    throw std::runtime_error("Modele Jev inattendu / Jev model mismatch / Modelo Jev inesperado");
+  }
   std::vector<double> values;
   values.reserve(expected);
   for (std::size_t i = 0; i < expected; ++i) {
@@ -220,7 +228,7 @@ std::vector<double> Client::evaluate(std::string_view value,
   if (http_status != 200) {
     throw std::runtime_error("Jev HTTP " + std::to_string(http_status));
   }
-  auto scores = parse_response(body.value, conditions.size());
+  auto scores = parse_response(body.value, conditions.size(), settings_.model);
   if (cache_.size() < kMaxCacheEntries &&
       request.size() <= kMaxCache - cache_bytes_) {
     cache_bytes_ += request.size();
