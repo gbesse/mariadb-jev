@@ -52,6 +52,32 @@ void check_text(std::string_view value, std::size_t limit, const char* name) {
   }
 }
 
+void validate_settings(const Settings& settings) {
+  const auto fail = []() { throw std::runtime_error("Configuration HTTP Jev invalide / Invalid Jev HTTP configuration / Configuracion HTTP Jev no valida"); };
+  if (settings.api_key.empty() || settings.api_key.size() > 8192 ||
+      settings.api_key.find_first_of("\r\n") != std::string::npos ||
+      settings.api_key.find('\0') != std::string::npos || settings.api_url.empty() ||
+      settings.api_url.size() > 8192 || settings.api_url.find('\0') != std::string::npos ||
+      settings.timeout_ms < 1 || settings.timeout_ms > 120000 ||
+      settings.max_requests < 1 || settings.max_requests > 100000) fail();
+  check_text(settings.model, 100, "model");
+  using Url = std::unique_ptr<CURLU, decltype(&curl_url_cleanup)>;
+  Url url(curl_url(), &curl_url_cleanup);
+  if (!url || curl_url_set(url.get(), CURLUPART_URL, settings.api_url.c_str(), 0) != CURLUE_OK) fail();
+  const auto part = [&](CURLUPart which) {
+    char* raw = nullptr;
+    const auto code = curl_url_get(url.get(), which, &raw, 0);
+    std::string value = code == CURLUE_OK && raw ? raw : "";
+    curl_free(raw);
+    return std::make_pair(code, value);
+  };
+  const auto scheme = part(CURLUPART_SCHEME).second;
+  const auto host = part(CURLUPART_HOST).second;
+  if (host.empty() || (scheme != "https" && !(scheme == "http" && host == "127.0.0.1")) ||
+      part(CURLUPART_USER).first == CURLUE_OK || part(CURLUPART_PASSWORD).first == CURLUE_OK ||
+      part(CURLUPART_FRAGMENT).first == CURLUE_OK) fail();
+}
+
 struct Body {
   std::string value;
   bool too_large = false;
@@ -75,13 +101,11 @@ Settings settings_from_environment() {
   if (settings.api_key.empty()) settings.api_key = getenv_or("TYPESAFE_API_KEY", "");
   if (settings.api_key.empty()) throw std::runtime_error("JEV_API_KEY is missing");
   settings.api_url = getenv_or("JEV_API_URL", "https://api.typesafe.ai/v1/systemone");
-  const bool tls = settings.api_url.rfind("https://", 0) == 0;
-  const bool loopback = settings.api_url.rfind("http://127.0.0.1:", 0) == 0;
-  if (!tls && !loopback) throw std::runtime_error("JEV_API_URL must use HTTPS");
   settings.model = getenv_or("JEV_MODEL", "jev-1.13.0");
   check_text(settings.model, 100, "model");
   settings.timeout_ms = static_cast<long>(parse_limit("JEV_TIMEOUT_MS", 10000, 120000));
   settings.max_requests = parse_limit("JEV_MAX_REQUESTS", 1000, 100000);
+  validate_settings(settings);
   return settings;
 }
 
@@ -180,6 +204,7 @@ std::vector<double> parse_response(std::string_view input, std::size_t expected,
 }
 
 Client::Client(Settings settings) : settings_(std::move(settings)) {
+  validate_settings(settings_);
   if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK) {
     throw std::runtime_error("could not initialize HTTP client");
   }

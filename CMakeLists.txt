@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(CURL REQUIRED IMPORTED_TARGET libcurl)
+pkg_check_modules(CURL REQUIRED IMPORTED_TARGET libcurl>=7.62)
 pkg_check_modules(JANSSON REQUIRED IMPORTED_TARGET jansson)
 find_path(MARIADB_INCLUDE_DIR mysql.h
   HINTS /usr/include/mariadb /usr/include/mysql
