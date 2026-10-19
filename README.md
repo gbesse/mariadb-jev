@@ -150,3 +150,11 @@ FR : Le parseur exige 1–8 questions et exactement autant de réponses avant al
 EN: The parser requires 1–8 questions and exactly that many answers before allocating score storage. Clients reject a declared model differing from the requested model, including a declared null model. Legacy replies omitting `model` remain accepted, so this does not prove remote model identity. CI builds Release and tests the engine and UDFs in actual MariaDB with mock HTTP; no live model or throughput measurement.
 
 ES: El parser exige 1–8 preguntas y exactamente tantas respuestas antes de reservar puntuaciones. El cliente rechaza un modelo declarado distinto del solicitado, incluido un modelo nulo. Se siguen aceptando respuestas antiguas sin `model`; no demuestra identidad del modelo remoto. CI compila Release y prueba motor y UDF en MariaDB real con HTTP simulado; sin modelo real ni medir rendimiento.
+
+## Destination HTTP parsée / Parsed HTTP endpoint / Destino HTTP analizado
+
+FR — La destination est validée avec l’analyseur libcurl (minimum 7.62), dans la configuration d’environnement et dans le constructeur C++. HTTPS est autorisé ; HTTP exige un hôte exactement `127.0.0.1`. Les identifiants intégrés, fragments, paramètres de transport invalides et clés contenant CR/LF sont refusés avant toute requête. Un préfixe ressemblant à une adresse locale ne suffit plus. Aucun corps, URL ou secret invalide n’est reproduit dans l’erreur.
+
+EN — Endpoints are validated with the libcurl parser (minimum 7.62), both for environment settings and direct C++ construction. HTTPS is allowed; HTTP requires exactly the host `127.0.0.1`. Embedded credentials, fragments, invalid transport limits and CR/LF-bearing keys are rejected before requests. A loopback-looking prefix is insufficient. Errors reproduce no invalid body, URL or secret.
+
+ES — Destinos se validan con el analizador libcurl (mínimo 7.62), tanto en entorno como constructor C++. HTTPS está permitido; HTTP exige host exactamente `127.0.0.1`. Credenciales integradas, fragmentos, límites inválidos y claves con CR/LF se rechazan antes de peticiones. Un prefijo que parezca local no basta. Errores no reproducen cuerpo, URL ni secreto inválido.

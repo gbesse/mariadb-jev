@@ -50,6 +50,17 @@ int main() {
   assert(jev::parse_response(R"({"model":"jev-1.13.0","answers":{"q0":{"type":"noul","noul":0.9}}})", 1, "jev-1.13.0")[0] == 0.9);
   assert(jev::parse_response(R"({"answers":{"q0":{"type":"noul","noul":0.9}}})", 1, "jev-1.13.0")[0] == 0.9);
   auto settings = jev::settings_from_environment();
+  for (const auto* endpoint : {"http://127.0.0.1:18765@evil.example/v1/systemone",
+       "http://127.0.0.1.evil.example/v1/systemone", "http://example.test/v1/systemone",
+       "https://user:password@example.test/v1/systemone", "https://example.test/#fragment",
+       "ftp://127.0.0.1/v1/systemone", "https://"}) {
+    auto invalid = settings; invalid.api_url = endpoint;
+    rejects([&] { jev::Client forbidden(invalid); });
+  }
+  { auto valid = settings; valid.api_url = "https://example.test/v1/systemone"; jev::Client accepted(valid); }
+  { auto invalid = settings; invalid.api_key = "synthetic\r\nInjected: value"; rejects([&] { jev::Client forbidden(invalid); }); }
+  { auto invalid = settings; invalid.timeout_ms = 0; rejects([&] { jev::Client forbidden(invalid); }); }
+  { auto invalid = settings; invalid.max_requests = 0; rejects([&] { jev::Client forbidden(invalid); }); }
   settings.max_requests = 1;
   jev::Client client(settings);
   rejects([&] { client.evaluate(invalid_utf8, conditions); });
