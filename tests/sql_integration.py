@@ -82,6 +82,12 @@ def main():
                        "jev_all(NULL, JSON_ARRAY('anything'))")
         if result != "1\t1\t0.91\tNULL":
             raise AssertionError("unexpected MariaDB UDF result")
+        explicit = mysql("SELECT jev_all_at('synthetic', JSON_ARRAY('first','second'), 0.8), "
+                         "jev_all_at('synthetic', JSON_ARRAY('first','second'), 0.9), "
+                         "jev_any_at('synthetic', JSON_ARRAY('first','second'), 0.9), "
+                         "jev_all_at(NULL, JSON_ARRAY('first'), 0.8), "
+                         "jev_any_at('synthetic', JSON_ARRAY('first'), NULL)")
+        if explicit != "1\t0\t1\tNULL\tNULL":raise AssertionError("explicit probability threshold UDF result mismatch")
         print("MariaDB SQL integration passed")
     finally:
         subprocess.run(["docker", "rm", "-f", CONTAINER], capture_output=True)
