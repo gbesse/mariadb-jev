@@ -24,7 +24,7 @@ bool initialize(UDF_INIT* init, UDF_ARGS* args, char* message, bool threshold = 
       throw std::runtime_error("expected two strings: value and condition(s)");
     }
     if (threshold) {
-      if (args->arg_type[2] != REAL_RESULT && args->arg_type[2] != INT_RESULT && args->arg_type[2] != DECIMAL_RESULT)
+      if (args->args[2] != nullptr && args->arg_type[2] != REAL_RESULT && args->arg_type[2] != INT_RESULT && args->arg_type[2] != DECIMAL_RESULT)
         throw std::runtime_error("Seuil numerique requis / Numeric threshold required / Umbral numerico requerido");
       args->arg_type[2] = REAL_RESULT;
     }

@@ -34,7 +34,11 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def run(*args, **kwargs):
-    return subprocess.run(args, check=True, capture_output=True, text=True, **kwargs)
+    result = subprocess.run(args, capture_output=True, text=True, **kwargs)
+    if result.returncode:
+        print(result.stderr, file=sys.stderr)
+        result.check_returncode()
+    return result
 
 
 def mysql(sql):
