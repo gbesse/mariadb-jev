@@ -158,3 +158,12 @@ FR — La destination est validée avec l’analyseur libcurl (minimum 7.62), da
 EN — Endpoints are validated with the libcurl parser (minimum 7.62), both for environment settings and direct C++ construction. HTTPS is allowed; HTTP requires exactly the host `127.0.0.1`. Embedded credentials, fragments, invalid transport limits and CR/LF-bearing keys are rejected before requests. A loopback-looking prefix is insufficient. Errors reproduce no invalid body, URL or secret.
 
 ES — Destinos se validan con el analizador libcurl (mínimo 7.62), tanto en entorno como constructor C++. HTTPS está permitido; HTTP exige host exactamente `127.0.0.1`. Credenciales integradas, fragmentos, límites inválidos y claves con CR/LF se rechazan antes de peticiones. Un prefijo que parezca local no basta. Errores no reproducen cuerpo, URL ni secreto inválido.
+
+
+## 2026-11-05 — FR / EN / ES
+
+FR : `jev_all_at(value, conditions_json, minimum_probability)` et `jev_any_at(...)` ajoutent un seuil SQL explicite [0.5,1]. Exemple .91/.84 : ALL à.8=1, ALL à.9=0, ANY à.9=1. Mettre à jour install.sql pour enregistrer les deux UDF. Les fonctions précédentes gardent0.5 ; NULL reste NULL. CI exige compilation C++, loopback et SQL dans MariaDB11.4 avant fusion ; compilateur/dépendances MariaDB locaux absents. Pas de publication sur une production.
+
+EN: `jev_all_at(value, conditions_json, minimum_probability)` and `jev_any_at(...)` add explicit SQL [0.5,1] thresholds. For .91/.84: ALL at.8=1, ALL at.9=0, ANY at.9=1. Update install.sql to register both UDFs. Old functions retain0.5; NULL stays NULL. CI requires C++ build, loopback and MariaDB11.4 SQL before merge; local MariaDB compiler/dependencies unavailable. No production deployment.
+
+ES: `jev_all_at(value, conditions_json, minimum_probability)` y `jev_any_at(...)` añaden umbral SQL [0.5,1]. Para .91/.84: ALL a.8=1, ALL a.9=0, ANY a.9=1. Actualizar install.sql para registrar ambas UDF. Funciones anteriores mantienen0.5; NULL sigue NULL. CI exige compilar C++, loopback y SQL MariaDB11.4 antes de fusionar; compilador/dependencias MariaDB locales ausentes. Sin despliegue en producción.
