@@ -13,11 +13,15 @@ CONTAINER = "mariadb-jev-ci"
 
 
 class Handler(BaseHTTPRequestHandler):
+    calls = 0
     def do_POST(self):
         assert self.path == "/v1/systemone"
         assert self.headers.get("Authorization") == "Bearer test-key"
         payload = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
-        assert payload["state"]["value"] == "The ending was good. Watch it!"
+        assert payload["state"]["value"] in ("The ending was good. Watch it!", "synthetic")
+        if payload["state"]["value"] == "synthetic":
+            assert [q["instructions"] for q in payload["questions"].values()] == ["first", "second"]
+        Handler.calls += 1
         answers = {
             key: {"type": "noul", "noul": 0.91 if key == "q0" else 0.84}
             for key in payload["questions"]
@@ -86,12 +90,15 @@ def main():
                        "jev_all(NULL, JSON_ARRAY('anything'))")
         if result != "1\t1\t0.91\tNULL":
             raise AssertionError("unexpected MariaDB UDF result")
+        calls_before = Handler.calls
         explicit = mysql("SELECT jev_all_at('synthetic', JSON_ARRAY('first','second'), 0.8), "
                          "jev_all_at('synthetic', JSON_ARRAY('first','second'), 0.9), "
                          "jev_any_at('synthetic', JSON_ARRAY('first','second'), 0.9), "
                          "jev_all_at(NULL, JSON_ARRAY('first'), 0.8), "
                          "jev_any_at('synthetic', JSON_ARRAY('first'), NULL)")
         if explicit != "1\t0\t1\tNULL\tNULL":raise AssertionError("explicit probability threshold UDF result mismatch")
+        if Handler.calls - calls_before != 3:
+            raise AssertionError("SQL NULL must not call provider")
         print("MariaDB SQL integration passed")
     finally:
         subprocess.run(["docker", "rm", "-f", CONTAINER], capture_output=True)
