@@ -20,7 +20,7 @@ class Handler(BaseHTTPRequestHandler):
         payload = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
         assert payload["state"]["value"] in ("The ending was good. Watch it!", "synthetic")
         if payload["state"]["value"] == "synthetic":
-            assert [q["instructions"] for q in payload["questions"].values()] == ["first", "second"]
+            assert [q["instructions"]["condition"] for q in payload["questions"].values()] == ["first", "second"]
         Handler.calls += 1
         answers = {
             key: {"type": "noul", "noul": 0.91 if key == "q0" else 0.84}
