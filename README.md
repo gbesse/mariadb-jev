@@ -167,3 +167,12 @@ FR : `jev_all_at(value, conditions_json, minimum_probability)` et `jev_any_at(..
 EN: `jev_all_at(value, conditions_json, minimum_probability)` and `jev_any_at(...)` add explicit SQL [0.5,1] thresholds. For .91/.84: ALL at.8=1, ALL at.9=0, ANY at.9=1. Update install.sql to register both UDFs. Old functions retain0.5; NULL stays NULL. CI requires C++ build, loopback and MariaDB11.4 SQL before merge; local MariaDB compiler/dependencies unavailable. No production deployment.
 
 ES: `jev_all_at(value, conditions_json, minimum_probability)` y `jev_any_at(...)` añaden umbral SQL [0.5,1]. Para .91/.84: ALL a.8=1, ALL a.9=0, ANY a.9=1. Actualizar install.sql para registrar ambas UDF. Funciones anteriores mantienen0.5; NULL sigue NULL. CI exige compilar C++, loopback y SQL MariaDB11.4 antes de fusionar; compilador/dependencias MariaDB locales ausentes. Sin despliegue en producción.
+
+
+## 2026-11-12 — FR / EN / ES
+
+FR : Compter les prédicats satisfaits via jev_count_at avec SQL NULL sans appel fournisseur.
+
+EN: Count satisfied predicates with jev_count_at while SQL NULL avoids provider calls.
+
+ES: Contar predicados satisfechos con jev_count_at sin llamadas proveedor para SQL NULL.
