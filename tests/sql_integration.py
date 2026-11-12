@@ -99,6 +99,12 @@ def main():
         if explicit != "1\t0\t1\tNULL\tNULL":raise AssertionError("explicit probability threshold UDF result mismatch")
         if Handler.calls - calls_before != 3:
             raise AssertionError("SQL NULL must not call provider")
+        calls_before_count = Handler.calls
+        counted = mysql("SELECT jev_count_at('synthetic', JSON_ARRAY('first','second'), 0.8), "
+                        "jev_count_at('synthetic', JSON_ARRAY('first','second'), 0.9), "
+                        "jev_count_at('synthetic', JSON_ARRAY('first','second'), NULL)")
+        if counted != "2\t1\tNULL" or Handler.calls - calls_before_count != 2:
+            raise AssertionError("semantic COUNT threshold or SQL NULL request count mismatch")
         print("MariaDB SQL integration passed")
     finally:
         subprocess.run(["docker", "rm", "-f", CONTAINER], capture_output=True)

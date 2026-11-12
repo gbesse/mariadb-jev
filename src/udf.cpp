@@ -120,4 +120,13 @@ void jev_all_at_deinit(UDF_INIT* init) { delete reinterpret_cast<Context*>(init-
 void jev_any_at_deinit(UDF_INIT* init) { delete reinterpret_cast<Context*>(init->ptr); }
 long long jev_all_at(UDF_INIT* init,UDF_ARGS* args,char* is_null,char* error) { return threshold_result(init,args,is_null,error,Mode::All); }
 long long jev_any_at(UDF_INIT* init,UDF_ARGS* args,char* is_null,char* error) { return threshold_result(init,args,is_null,error,Mode::Any); }
+bool jev_count_at_init(UDF_INIT* init,UDF_ARGS* args,char* message){return initialize(init,args,message,true);}
+void jev_count_at_deinit(UDF_INIT* init){delete reinterpret_cast<Context*>(init->ptr);}
+long long jev_count_at(UDF_INIT* init,UDF_ARGS* args,char* is_null,char* error){
+ if(!args->args[0]||!args->args[1]||!args->args[2]){*is_null=1;return 0;}
+ const double threshold=*reinterpret_cast<double*>(args->args[2]);
+ if(!std::isfinite(threshold)||threshold<.5||threshold>1){*is_null=1;*error=1;return 0;}
+ try{const auto values=evaluate(init,args,Mode::All);return static_cast<long long>(std::count_if(values.begin(),values.end(),[threshold](double p){return p>=threshold;}));}
+ catch(...){*is_null=1;*error=1;return 0;}
+}
 }  // extern "C"
